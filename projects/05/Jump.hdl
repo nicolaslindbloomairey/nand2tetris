@@ -1,0 +1,71 @@
+CHIP Jump {
+    IN  j1, //jump if <0
+        j2, //jump if =0
+        j3, //jump if >0
+        zr, //ALU out =0
+        ng; //ALU out <0
+
+    OUT out;
+
+    PARTS:
+
+    //group A of four options never outputs a jump
+    //a is always = 0
+    
+    //group B logic where j bits are 001
+    Or(a=j1, b=j2, out=b05);
+    Not(in=b05, out=b1);
+    And(a=b1, b=j3, out=b2);
+    Or(a=zr, b=ng, out=b25);
+    Not(in=b25, out=b3);
+    And(a=b2, b=b3, out=b);
+    
+    //group C logic where j bits are 010
+    Or(a=j1, b=j3, out=c05);
+    Not(in=c05, out=c1);
+    And(a=c1, b=j2, out=c2);
+    And(a=c2, b=zr, out=c);
+
+    //group D logic 011
+    Not(in=j1, out=d1);
+    And(a=d1, b=j2, out=d2);
+    And(a=d2, b=j3, out=d3);
+    Xor(a=zr, b=ng, out=d35);
+    Not(in=d35, out=d4);
+    Or(a=d4, b=zr, out=d5);
+    And(a=d3, b=d5, out=d);
+
+    //group E logic 100
+    Or(a=j2, b=j3, out=e1);
+    Or(a=e1, b=zr, out=e15);
+    Not(in=e15, out=e2);
+    And(a=j1, b=e2, out=e3);
+    And(a=e3, b=ng, out=e);
+
+    //group F logic 101
+    And(a=j1, b=j3, out=f1);
+    Or(a=j2, b=zr, out=f15);
+    Not(in=f15, out=f2);
+    And(a=f1, b=f2, out=f);
+
+    //group G logic 110
+    And(a=j1, b=j2, out=g1);
+    Not(in=j3, out=g2);
+    And(a=g1, b=g2, out=g3);
+    Or(a=zr, b=ng, out=g4);
+    And(a=g3, b=g4, out=g);
+
+    //group H logic 111
+    And(a=j1, b=j2, out=h1);
+    And(a=h1, b=j3, out=h);
+
+    Or8Way( in[1]=b,
+            in[2]=c,
+            in[3]=d,
+            in[4]=e,
+            in[5]=f,
+            in[6]=g,
+            in[7]=h,
+            out=out);
+
+}

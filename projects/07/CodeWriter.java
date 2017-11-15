@@ -13,5 +13,15 @@ public class CodeWriter {
     //public void setFileName(String fileName) {
 
     public void writeArithmetic(String command) {
+        //add in hack assembly
+        @SP
+        A=M
+        D=M
+        A=A-1
+        M=D+M
+        @SP
+        M=M-1
+
+        
     }
 }

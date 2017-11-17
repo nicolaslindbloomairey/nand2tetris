@@ -20,7 +20,7 @@ public class Parser {
 
                 if (!line.startsWith("//")) {
                     if (line.contains("//")) {
-                        String woComment = line.substring(0, nextline.indexOf("/")).trim();
+                        String woComment = line.substring(0, line.indexOf("/")).trim();
                         file.add(woComment);
                     } else {
                         file.add(line);
@@ -47,8 +47,12 @@ public class Parser {
         if (hasMoreCommands()) {
             String[] line = file.get(c).split("\\s+"); //split by any number of consecutive spaces
             command = line[0];
-            arg1 = line[1];
-            arg2 = Integer.parseInt(line[2]);
+            if (line.length > 1) {
+                arg1 = line[1];
+            }
+            if (line.length > 2) {
+                arg2 = Integer.parseInt(line[2]);
+            }
         }
     }
 
@@ -71,6 +75,8 @@ public class Parser {
             return "C_RETURN";
         } else if (command.equalsIgnoreCase("call")) {
             return "C_CALL";
+        } else {
+            return "ERROR";
         }
     }
 
